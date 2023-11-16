@@ -1,0 +1,37 @@
+{
+    "AF": {
+        "en": "Africa",
+        "es": "África",
+        "ca": "Àfrica"
+    },
+    "AN": {
+        "en": "Antarctica",
+        "es": "Antártida",
+        "ca": "Antàrtida"
+    },
+    "AS": {
+        "en": "Asia",
+        "es": "Ásia",
+        "ca": "Àsia"
+    },
+    "EU": {
+        "en": "Europe",
+        "es": "Europa",
+        "ca": "Europa"
+    },
+    "NA": {
+        "en": "North America",
+        "es": "Norte América",
+        "ca": "Nord Amèrica"
+    },
+    "OC": {
+        "en": "Oceania",
+        "es": "Oceanía",
+        "ca": "Oceania"
+    },
+    "SA": {
+        "en": "South America",
+        "es": "Sudamerica",
+        "ca": "Amèrica del Sud"
+    }
+}
