@@ -1,0 +1,148 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up()
+    {
+        Schema::create('continents', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('lat', 11, 7)->nullable()->comment('Latitude');
+            $table->decimal('lon', 11, 7)->nullable()->comment('Longitude');
+            $table->string('iso', 2)->unique()->nullable()->comment('ISO code');
+            $table->string('name')->index()->comment('Continent Name');
+            $table->json('translations')->nullable()->comment('Name Translations');
+            $table->timestamps();
+        });
+
+        Schema::create('countries', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('continent_id')->nullable()->unsigned();
+            $table->decimal('lat', 11, 7)->nullable()->comment('Latitude');
+            $table->decimal('lon', 11, 7)->nullable()->comment('Longitude');
+            $table->string('iso', 2)->unique()->nullable()->comment('ISO 2-letter code');
+            $table->string('iso3', 3)->unique()->nullable()->comment('ISO 3-letter code');
+            $table->string('name')->index()->comment('Country Name');
+            $table->json('translations')->nullable()->comment('Name Translations');
+            $table->timestamps();
+
+            $table->foreign('continent_id')
+                ->references('id')->on('continents')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+        });
+
+        Schema::create('communities', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('country_id')->nullable()->unsigned()->comment('Country ID');
+            $table->decimal('lat', 11, 7)->nullable()->comment('Latitude');
+            $table->decimal('lon', 11, 7)->nullable()->comment('Longitude');
+            $table->string('iso', 2)->nullable()->comment('ISO Code');
+            $table->string('name')->index()->comment('Community Name');
+            $table->json('translations')->nullable()->comment('Name Translations');
+            $table->timestamps();
+
+            // Foreign key reference
+            $table->foreign('country_id')
+                ->references('id')->on('countries')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+
+            // Composite unique index for country_id and iso
+            $table->unique(['country_id', 'iso'], 'country_iso_unique');
+        });
+
+        Schema::create('states', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('country_id')->nullable()->unsigned()->comment('Country ID');
+            $table->bigInteger('community_id')->nullable()->unsigned()->comment('Community ID');
+            $table->decimal('lat', 11, 7)->nullable()->comment('Latitude');
+            $table->decimal('lon', 11, 7)->nullable()->comment('Longitude');
+            $table->string('iso', 2)->nullable()->comment('ISO Code');
+            $table->string('name')->index()->comment('State Name');
+            $table->json('translations')->nullable()->comment('Name Translations');
+            $table->timestamps();
+
+            // Foreign key references
+            $table->foreign('country_id')
+                ->references('id')->on('countries')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+            $table->foreign('community_id')
+                ->references('id')->on('communities')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+
+            // Composite unique index for country_id and iso
+            $table->unique(['country_id', 'iso'], 'state_country_iso_unique');
+        });
+
+        Schema::create('cities', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('state_id')->nullable()->unsigned()->comment('State ID');
+            $table->decimal('lat', 11, 7)->nullable()->comment('Latitude');
+            $table->decimal('lon', 11, 7)->nullable()->comment('Longitude');
+            $table->string('po', 10)->nullable()->comment('Postal Code'); // Adjusted length
+            $table->string('name')->index()->comment('City Name');
+            $table->json('translations')->nullable()->comment('Name Translations');
+            $table->timestamps();
+
+            // Foreign key reference
+            $table->foreign('state_id')
+                ->references('id')->on('states')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+
+            // Optional: Composite unique index for state_id and po
+            $table->unique(['state_id', 'po'], 'state_po_unique');
+        });
+
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('city_id')->nullable()->unsigned()->comment('City ID');
+            $table->decimal('lat', 11, 7)->nullable()->comment('Latitude');
+            $table->decimal('lon', 11, 7)->nullable()->comment('Longitude');
+            $table->string('po', 10)->nullable()->comment('Postal Code');
+            $table->string('address', 100)->nullable()->comment('Address Line');
+            $table->string('number', 10)->nullable()->comment('Building/Property Number');
+            $table->string('stair', 25)->nullable()->comment('Stair');
+            $table->string('floor', 10)->nullable()->comment('Floor');
+            $table->string('door', 10)->nullable()->comment('Door');
+            $table->timestamps();
+
+            // Foreign key reference
+            $table->foreign('city_id')
+                ->references('id')->on('cities')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+            $table->unique(['city_id', 'address', 'number', 'stair', 'floor', 'door'], 'address_unique');
+        });
+
+        Schema::create('addressables', function (Blueprint $table) {
+            $table->bigInteger('address_id')->unsigned();
+            $table->bigInteger('addressable_id')->unsigned();
+            $table->string('addressable_type');
+            $table->string('address_type')->nullable();
+            $table->foreign('address_id')->references('id')->on('addresses')->cascadeOnUpdate()->cascadeOnDelete();
+        });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('addressables');
+        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('cities');
+        Schema::dropIfExists('states');
+        Schema::dropIfExists('communities');
+        Schema::dropIfExists('countries');
+        Schema::dropIfExists('continents');
+    }
+};
