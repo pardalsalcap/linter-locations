@@ -2,10 +2,6 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Pardalsalcap\LinterLocations\Models\Community;
-use Pardalsalcap\LinterLocations\Models\Country;
-use Pardalsalcap\LinterLocations\Models\State;
-use App\Repositories\ContentRepository;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -16,6 +12,9 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Pardalsalcap\LinterLocations\Models\Community;
+use Pardalsalcap\LinterLocations\Models\Country;
+use Pardalsalcap\LinterLocations\Models\State;
 use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 use Pardalsalcap\LinterLocations\Resources\StateResource\Pages\CreateState;
 use Pardalsalcap\LinterLocations\Resources\StateResource\Pages\EditState;
@@ -54,13 +53,13 @@ class StateResource extends Resource
                                         ->searchable()
                                         ->preload()
                                         ->required()
-                                        ->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale())),
+                                        ->getOptionLabelFromRecordUsing(fn (Country $country) => $country->translate(app()->getLocale())),
                                     Select::make('community_id')
                                         ->relationship('community', 'name')
                                         ->label(__('linter-locations::states.community_id_field'))
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn(Community $community) => $community->translate(app()->getLocale())),
+                                        ->getOptionLabelFromRecordUsing(fn (Community $community) => $community->translate(app()->getLocale())),
                                 ]),
                             ]),
                         Group::make()
@@ -87,8 +86,7 @@ class StateResource extends Resource
                     ->searchable()
                     ->formatStateUsing(function (State $record) {
                         return $record->translate(app()->getLocale());
-                    })
-                ,
+                    }),
                 TextColumn::make('country.name')
                     ->label(__('linter-locations::states.country_id_column'))
                     ->sortable()

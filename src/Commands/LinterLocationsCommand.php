@@ -2,13 +2,13 @@
 
 namespace Pardalsalcap\LinterLocations\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Pardalsalcap\LinterLocations\Models\City;
 use Pardalsalcap\LinterLocations\Models\Community;
 use Pardalsalcap\LinterLocations\Models\Continent;
-use Exception;
 use Pardalsalcap\LinterLocations\Models\Country;
 use Pardalsalcap\LinterLocations\Models\State;
 use Pardalsalcap\LinterLocations\Traits\LocationsTrait;
@@ -29,7 +29,6 @@ class LinterLocationsCommand extends Command
     {
         $this->loadConfiguration();
         $this->populateDatabase();
-
 
         $this->info('Installation completed.');
 
@@ -59,7 +58,7 @@ class LinterLocationsCommand extends Command
         try {
             $check = Continent::count();
             if ($check) {
-                throw new Exception("The continents table already has data");
+                throw new Exception('The continents table already has data');
             }
 
             $continentsData = $this->loadJson('continents.json');
@@ -78,19 +77,21 @@ class LinterLocationsCommand extends Command
                     'lat' => $this->adaptCoordinates($data['location']['latitude']),
                     'lon' => $this->adaptCoordinates($data['location']['longitude']),
                     'translations' => json_encode($trimmed_translations),
-                    'created_at' => now()->format("Y-m-d H:i:s"),
-                    'updated_at' => now()->format("Y-m-d H:i:s"),
+                    'created_at' => now()->format('Y-m-d H:i:s'),
+                    'updated_at' => now()->format('Y-m-d H:i:s'),
                 ];
             }
             DB::transaction(function () use ($continents) {
                 DB::table('continents')->insert($continents);
             });
             $this->info('Continents table populated successfully');
+
             return self::SUCCESS;
         } catch (Exception $e) {
             // Log the error and rethrow the exception
             Log::error($e->getMessage());
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }
@@ -101,7 +102,7 @@ class LinterLocationsCommand extends Command
         try {
             $check = Country::count();
             if ($check) {
-                throw new Exception("The countries table already has data");
+                throw new Exception('The countries table already has data');
             }
 
             $countries = $this->loadJson('countries.json');
@@ -125,18 +126,20 @@ class LinterLocationsCommand extends Command
                     'continent_id' => $continent_id,
                     'lat' => $this->adaptCoordinates($country['latlng'][0] ?? null),
                     'lon' => $this->adaptCoordinates($country['latlng'][1] ?? null),
-                    'created_at' => now()->format("Y-m-d H:i:s"),
-                    'updated_at' => now()->format("Y-m-d H:i:s"),
+                    'created_at' => now()->format('Y-m-d H:i:s'),
+                    'updated_at' => now()->format('Y-m-d H:i:s'),
                 ];
             }
             DB::transaction(function () use ($countries_data) {
                 DB::table('countries')->insert($countries_data);
             });
             $this->info('Countries table populated successfully');
+
             return self::SUCCESS;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
 
@@ -148,18 +151,18 @@ class LinterLocationsCommand extends Command
         try {
             $check = Community::count();
             if ($check) {
-                throw new Exception("The communities table already has data");
+                throw new Exception('The communities table already has data');
             }
 
             $spain = Country::where('iso', 'ES')->first();
-            if (!$spain) {
-                throw new Exception("The country Spain was not found");
+            if (! $spain) {
+                throw new Exception('The country Spain was not found');
             }
             $communities = $this->loadJson('/spain/states.json');
             $arr = [];
             $communities_data = [];
             foreach ($communities as $value) {
-                if (!isset($arr[$value['fields']['cod_ccaa']])) {
+                if (! isset($arr[$value['fields']['cod_ccaa']])) {
                     $arr[$value['fields']['cod_ccaa']] = [
                         'name' => $value['fields']['ccaa'],
                         'latitude' => $value['fields']['geo_point_2d'][0] ?? null,
@@ -179,18 +182,20 @@ class LinterLocationsCommand extends Command
                     'country_id' => $spain->id,
                     'lat' => $this->adaptCoordinates($value['latitude']),
                     'lon' => $this->adaptCoordinates($value['longitude']),
-                    'created_at' => now()->format("Y-m-d H:i:s"),
-                    'updated_at' => now()->format("Y-m-d H:i:s"),
+                    'created_at' => now()->format('Y-m-d H:i:s'),
+                    'updated_at' => now()->format('Y-m-d H:i:s'),
                 ];
             }
             DB::transaction(function () use ($communities_data) {
                 DB::table('communities')->insert($communities_data);
             });
             $this->info('Communities table populated successfully');
+
             return self::SUCCESS;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }
@@ -201,12 +206,12 @@ class LinterLocationsCommand extends Command
         try {
             $check = State::count();
             if ($check) {
-                throw new Exception("The states table already has data");
+                throw new Exception('The states table already has data');
             }
 
             $spain = Country::where('iso', 'ES')->first();
-            if (!$spain) {
-                throw new Exception("The country Spain was not found");
+            if (! $spain) {
+                throw new Exception('The country Spain was not found');
             }
 
             $states = $this->loadJson('/spain/states.json');
@@ -214,7 +219,7 @@ class LinterLocationsCommand extends Command
             $arr = [];
             $states_data = [];
             foreach ($states as $value) {
-                if (!isset($arr[$value['fields']['codigo']])) {
+                if (! isset($arr[$value['fields']['codigo']])) {
                     $arr[$value['fields']['codigo']] = [
                         'name' => $value['fields']['provincia'],
                         'community_iso' => $value['fields']['cod_ccaa'],
@@ -236,18 +241,20 @@ class LinterLocationsCommand extends Command
                     'community_id' => $communities->where('iso', $value['community_iso'])->first()->id,
                     'lat' => $this->adaptCoordinates($value['geo_point_2d'][0] ?? null),
                     'lon' => $this->adaptCoordinates($value['geo_point_2d'][1] ?? null),
-                    'created_at' => now()->format("Y-m-d H:i:s"),
-                    'updated_at' => now()->format("Y-m-d H:i:s"),
+                    'created_at' => now()->format('Y-m-d H:i:s'),
+                    'updated_at' => now()->format('Y-m-d H:i:s'),
                 ];
             }
             DB::transaction(function () use ($states_data) {
                 DB::table('states')->insert($states_data);
             });
             $this->info('States table populated successfully');
+
             return self::SUCCESS;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }
@@ -257,7 +264,7 @@ class LinterLocationsCommand extends Command
         try {
             $check = City::count();
             if ($check) {
-                throw new Exception("The cities table already has data");
+                throw new Exception('The cities table already has data');
             }
             $this->comment('Installing spanish cities');
             $cities = $this->loadJson('/spain/cities.json');
@@ -273,19 +280,19 @@ class LinterLocationsCommand extends Command
                         }
                         $check = City::count();
                         if ($check) {
-                            throw new Exception("The cities table already has data");
+                            throw new Exception('The cities table already has data');
                         }
 
                         $spain = Country::where('iso', 'ES')->first();
-                        if (!$spain) {
-                            throw new Exception("The country Spain was not found");
+                        if (! $spain) {
+                            throw new Exception('The country Spain was not found');
                         }
                         $cities_data[] = [
                             'state_id' => $states->where('iso', $town['parent_code'])->first()?->id,
                             'name' => $town['label'],
                             'translations' => json_encode($translations),
-                            'created_at' => now()->format("Y-m-d H:i:s"),
-                            'updated_at' => now()->format("Y-m-d H:i:s"),
+                            'created_at' => now()->format('Y-m-d H:i:s'),
+                            'updated_at' => now()->format('Y-m-d H:i:s'),
                         ];
                     }
                 }
@@ -294,10 +301,12 @@ class LinterLocationsCommand extends Command
                 DB::table('cities')->insert($cities_data);
             });
             $this->info('Cities table populated successfully');
+
             return self::SUCCESS;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }
@@ -305,21 +314,23 @@ class LinterLocationsCommand extends Command
     public function loadJson($file_name)
     {
         // Construct the path relative to the package's directory
-        $path = base_path('vendor/pardalsalcap/linter-locations/resources/datasets/' . $file_name);
+        $path = base_path('vendor/pardalsalcap/linter-locations/resources/datasets/'.$file_name);
 
         try {
             // Check if the file exists and is readable
-            if (!file_exists($path) || !is_readable($path)) {
+            if (! file_exists($path) || ! is_readable($path)) {
                 throw new Exception("JSON file not found or not readable: $path");
             }
 
             // Proceed with reading the file
             $jsonContent = file_get_contents($path);
+
             return json_decode($jsonContent, true);
         } catch (Exception $e) {
             // Log the error and rethrow the exception
-            Log::error("Error loading JSON file: $file_name, Error: " . $e->getMessage());
+            Log::error("Error loading JSON file: $file_name, Error: ".$e->getMessage());
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }

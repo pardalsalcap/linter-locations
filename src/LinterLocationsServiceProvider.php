@@ -2,9 +2,9 @@
 
 namespace Pardalsalcap\LinterLocations;
 
+use Pardalsalcap\LinterLocations\Commands\LinterLocationsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Pardalsalcap\LinterLocations\Commands\LinterLocationsCommand;
 
 class LinterLocationsServiceProvider extends PackageServiceProvider
 {

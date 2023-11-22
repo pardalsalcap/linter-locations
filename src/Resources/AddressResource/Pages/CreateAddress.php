@@ -3,7 +3,6 @@
 namespace Pardalsalcap\LinterLocations\Resources\AddressResource\Pages;
 
 use App\Filament\Resources\AddressResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAddress extends CreateRecord

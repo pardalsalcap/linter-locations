@@ -2,6 +2,7 @@
 
 namespace Pardalsalcap\LinterLocations\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Pardalsalcap\LinterLocations\Traits\HasTranslations;
 use Pardalsalcap\LinterLocations\Traits\LocationsTrait;
-use App\Models\User;
 
 /**
  * @property int $id
@@ -51,5 +51,4 @@ class Address extends Model
     {
         return $this->belongsToMany('App\Models\User', 'addressables', 'address_id', 'addressable_id', 'id', 'id')->withPivot(['address_type']);
     }
-
 }
