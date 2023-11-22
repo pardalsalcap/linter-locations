@@ -19,13 +19,13 @@ class LinterLocationsRepository
         return $result;
     }
 
-    public static function countriesAll ()
+    public static function countriesAll()
     {
-        return Country::orderBy("name", "ASC")->pluck("name", "id");
+        return Country::orderBy('name', 'ASC')->pluck('name', 'id');
     }
 
-    public static function countryStates ($country_id)
+    public static function countryStates($country_id)
     {
-        return State::where("country_id", $country_id)->orderBy("name", "ASC")->pluck("name", "id");
+        return State::where('country_id', $country_id)->orderBy('name', 'ASC')->pluck('name', 'id');
     }
 }

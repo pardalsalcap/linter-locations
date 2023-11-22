@@ -2,7 +2,6 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Pardalsalcap\LinterLocations\Models\Continent;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -12,11 +11,11 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Pardalsalcap\LinterLocations\Models\Country;
+use Pardalsalcap\LinterLocations\Models\Continent;
+use Pardalsalcap\LinterLocations\Repositories\ContinentRepository;
 use Pardalsalcap\LinterLocations\Resources\ContinentResource\Pages\CreateContinent;
 use Pardalsalcap\LinterLocations\Resources\ContinentResource\Pages\EditContinent;
 use Pardalsalcap\LinterLocations\Resources\ContinentResource\Pages\ListContinents;
-use Pardalsalcap\LinterLocations\Repositories\ContinentRepository;
 
 class ContinentResource extends Resource
 {
@@ -38,20 +37,20 @@ class ContinentResource extends Resource
                             ->schema([
                                 Section::make()->schema([
                                     TextInput::make('iso')
-                                        ->label(__("linter-locations::continents.iso_field"))
+                                        ->label(__('linter-locations::continents.iso_field'))
                                         ->required()
                                         ->unique(ignoreRecord: true)
                                         ->minLength(2)
                                         ->maxLength(2),
                                     TextInput::make('name')
-                                        ->label(__("linter-locations::continents.name_field"))
+                                        ->label(__('linter-locations::continents.name_field'))
                                         ->required(),
                                     TextInput::make('lat')
-                                        ->label(__("linter-locations::continents.lat_field"))
+                                        ->label(__('linter-locations::continents.lat_field'))
                                         ->numeric()
                                         ->rules(['decimal:1,7', 'min:-90', 'max:90']),
                                     TextInput::make('lon')
-                                        ->label(__("linter-locations::continents.lon_field"))
+                                        ->label(__('linter-locations::continents.lon_field'))
                                         ->numeric()
                                         ->rules(['decimal:1,7', 'min:-180', 'max:180']),
                                 ]),

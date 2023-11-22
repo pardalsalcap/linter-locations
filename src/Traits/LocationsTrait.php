@@ -36,7 +36,7 @@ trait LocationsTrait
         return Address::where('city_id', $this->id)->update(['city_id' => $alternative]);
     }
 
-    public function adaptCoordinates ($coordinate=null, $precision = 7): float
+    public function adaptCoordinates($coordinate = null, $precision = 7): float
     {
         return round($coordinate ?? 0, $precision);
     }

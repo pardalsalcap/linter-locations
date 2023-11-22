@@ -2,7 +2,6 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Pardalsalcap\LinterLocations\Models\Community;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -13,11 +12,12 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Pardalsalcap\LinterLocations\Models\Community;
 use Pardalsalcap\LinterLocations\Models\Country;
+use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 use Pardalsalcap\LinterLocations\Resources\CommunityResource\Pages\CreateCommunity;
 use Pardalsalcap\LinterLocations\Resources\CommunityResource\Pages\EditCommunity;
 use Pardalsalcap\LinterLocations\Resources\CommunityResource\Pages\ListCommunities;
-use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 
 class CommunityResource extends Resource
 {

@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AddressUser extends Model
 {
     protected $keyType = 'integer';
+
     public $timestamps = false;
 
     protected $fillable = ['address_id', 'user_id', 'address_type', 'created_at', 'updated_at'];
