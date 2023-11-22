@@ -17,9 +17,16 @@ class LinterLocationsServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('linter-locations')
-            ->hasConfigFile()
+            ->hasConfigFile('linter-locations')
             ->hasViews()
-            ->hasMigration('create_linter-locations_table')
+            ->hasTranslations()
+            ->hasMigration('create_linter_locations_tables')
             ->hasCommand(LinterLocationsCommand::class);
+    }
+
+    public function register()
+    {
+        parent::register();
+        $this->app->register(EventServiceProvider::class);
     }
 }

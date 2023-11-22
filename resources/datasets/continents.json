@@ -1,37 +1,79 @@
 {
     "AF": {
-        "en": "Africa",
-        "es": "África",
-        "ca": "Àfrica"
+        "translations": {
+            "en": "Africa",
+            "es": "África",
+            "ca": "Àfrica"
+        },
+        "location": {
+            "latitude": -8.783195,
+            "longitude": 34.508522
+        }
     },
     "AN": {
-        "en": "Antarctica",
-        "es": "Antártida",
-        "ca": "Antàrtida"
+        "translations": {
+            "en": "Antarctica",
+            "es": "Antártida",
+            "ca": "Antàrtida"
+        },
+        "location": {
+            "latitude": -52.1065582,
+            "longitude":-51.1099525
+        }
     },
     "AS": {
-        "en": "Asia",
-        "es": "Ásia",
-        "ca": "Àsia"
+        "translations": {
+            "en": "Asia",
+            "es": "Ásia",
+            "ca": "Àsia"
+        },
+        "location": {
+            "latitude": 27.3351351,
+            "longitude": 78.5866909
+        }
     },
     "EU": {
-        "en": "Europe",
-        "es": "Europa",
-        "ca": "Europa"
+        "translations": {
+            "en": "Europe",
+            "es": "Europa",
+            "ca": "Europa"
+        },
+        "location": {
+            "latitude": 51.6733956,
+            "longitude": 10.5218584
+        }
     },
     "NA": {
-        "en": "North America",
-        "es": "Norte América",
-        "ca": "Nord Amèrica"
+        "translations": {
+            "en": "North America",
+            "es": "Norte América",
+            "ca": "Nord Amèrica"
+        },
+        "location": {
+            "latitude": 35.6157685,
+            "longitude": -131.2001659
+        }
     },
     "OC": {
-        "en": "Oceania",
-        "es": "Oceanía",
-        "ca": "Oceania"
+        "translations": {
+            "en": "Oceania",
+            "es": "Oceanía",
+            "ca": "Oceania"
+        },
+        "location": {
+            "latitude": -7.4446709,
+            "longitude": 82.7200474
+        }
     },
     "SA": {
-        "en": "South America",
-        "es": "Sudamerica",
-        "ca": "Amèrica del Sud"
+        "translations": {
+            "en": "South America",
+            "es": "Sudamerica",
+            "ca": "Amèrica del Sud"
+        },
+        "location": {
+            "latitude": -18.4332714,
+            "longitude": -83.5942206
+        }
     }
 }
