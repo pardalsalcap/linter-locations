@@ -4,8 +4,8 @@ namespace Pardalsalcap\LinterLocations\Repositories;
 
 class ContinentRepository extends LinterLocationsRepository
 {
-    public static function selectBox ()
+    public static function selectBox()
     {
-        return ;
+
     }
 }

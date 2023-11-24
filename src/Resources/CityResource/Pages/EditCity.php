@@ -20,9 +20,8 @@ class EditCity extends EditRecord
     protected function fillForm(): void
     {
         $arr = $this->record->toArray();
-        if (!empty($arr['state_id']))
-        {
-            $arr['country_id']=$this->record->state->country_id;
+        if (! empty($arr['state_id'])) {
+            $arr['country_id'] = $this->record->state->country_id;
         }
         $this->form->fill($arr);
     }

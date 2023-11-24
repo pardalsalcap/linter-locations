@@ -2,8 +2,6 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Pardalsalcap\LinterLocations\Models\State;
-use App\Repositories\LocationsRepository;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -18,10 +16,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Pardalsalcap\LinterLocations\Models\City;
 use Pardalsalcap\LinterLocations\Models\Country;
+use Pardalsalcap\LinterLocations\Models\State;
+use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 use Pardalsalcap\LinterLocations\Resources\CityResource\Pages\CreateCity;
 use Pardalsalcap\LinterLocations\Resources\CityResource\Pages\EditCity;
 use Pardalsalcap\LinterLocations\Resources\CityResource\Pages\ListCities;
-use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 
 class CityResource extends Resource
 {
@@ -45,9 +44,9 @@ class CityResource extends Resource
                                     TextInput::make('name')->required()
                                         ->label(__('linter-locations::cities.name_field')),
                                     Select::make('country_id')
-                                        ->label(__("linter-locations::cities.country_id_field"))
+                                        ->label(__('linter-locations::cities.country_id_field'))
                                         ->relationship('state.country')
-                                        ->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
+                                        ->getOptionLabelFromRecordUsing(fn (Country $country) => $country->translate(app()->getLocale()))
                                         ->preload()
                                         ->searchable()
                                         ->reactive()
@@ -55,7 +54,7 @@ class CityResource extends Resource
                                         ->live(onBlur: true)->afterStateUpdated(function (Get $get, Set $set, $old, $state) {
                                             $country = Country::find($state);
                                             if ($country) {
-                                                $state_id = (int)$get('state_id');
+                                                $state_id = (int) $get('state_id');
 
                                                 if ($state_id && $state_check = State::find($state_id)) {
                                                     if ($state_check->country_id !== $country->id) {
@@ -75,6 +74,7 @@ class CityResource extends Resource
                                             if ($country) {
                                                 return $country->states->pluck('name', 'id');
                                             }
+
                                             return State::all()->pluck('name', 'id');
                                         })
                                         ->required(),
@@ -82,7 +82,7 @@ class CityResource extends Resource
                             ]),
                         Group::make()
                             ->schema([
-                                Section::make()->schema(LinterLocationsRepository::input_translatable( 'cities')),
+                                Section::make()->schema(LinterLocationsRepository::input_translatable('cities')),
                             ]),
                     ]),
             ]);

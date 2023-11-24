@@ -2,8 +2,6 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Pardalsalcap\LinterLocations\Models\Continent;
-use Pardalsalcap\LinterLocations\Models\Country;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -14,10 +12,12 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Pardalsalcap\LinterLocations\Models\Continent;
+use Pardalsalcap\LinterLocations\Models\Country;
+use Pardalsalcap\LinterLocations\Repositories\ContinentRepository;
 use Pardalsalcap\LinterLocations\Resources\CountryResource\Pages\CreateCountry;
 use Pardalsalcap\LinterLocations\Resources\CountryResource\Pages\EditCountry;
 use Pardalsalcap\LinterLocations\Resources\CountryResource\Pages\ListCountries;
-use Pardalsalcap\LinterLocations\Repositories\ContinentRepository;
 
 class CountryResource extends Resource
 {
@@ -74,7 +74,7 @@ class CountryResource extends Resource
                 TextColumn::make('name')
                     ->label(__('linter-locations::countries.name_column'))
                     ->sortable()
-                    ->formatStateUsing(function (Country $country){
+                    ->formatStateUsing(function (Country $country) {
                         return $country->translate(app()->getLocale());
                     })
                     ->searchable(),
@@ -82,7 +82,7 @@ class CountryResource extends Resource
                     ->label(__('linter-locations::countries.continent_id_column'))
                     ->sortable()
                     ->searchable()
-                    ->formatStateUsing(function (Country $country){
+                    ->formatStateUsing(function (Country $country) {
                         return $country->continent?->translate(app()->getLocale());
                     }),
             ])
