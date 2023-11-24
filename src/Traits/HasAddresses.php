@@ -2,8 +2,6 @@
 
 namespace Pardalsalcap\LinterLocations\Traits;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Pardalsalcap\LinterLocations\Models\Address;
 use Pardalsalcap\LinterLocations\Models\Addressable;
@@ -17,37 +15,36 @@ trait HasAddresses
 
     public function attachAddress(Address $address)
     {
-        $addressable = Addressable::where("addressable_id", $this->id)
-            ->where("addressable_type", self::class)
-            ->where("address_id", $address->id)
+        $addressable = Addressable::where('addressable_id', $this->id)
+            ->where('addressable_type', self::class)
+            ->where('address_id', $address->id)
             ->firstOrNew();
         $addressable->address_id = $address->id;
         $addressable->addressable_id = $this->id;
         $addressable->addressable_type = self::class;
+
         return $addressable->save();
     }
 
     public function detachAddress(Address $address)
     {
-        return Addressable::where("address_id", $address->id)
-            ->where("addressable_id", $this->id)
-            ->where("addressable_type", self::class)
+        return Addressable::where('address_id', $address->id)
+            ->where('addressable_id', $this->id)
+            ->where('addressable_type', self::class)
             ->delete();
     }
 
     public function syncAddresses(...$addresses)
     {
         $addresses = collect($addresses);
-        $addresses_ids = $addresses->pluck("id")->all();
+        $addresses_ids = $addresses->pluck('id')->all();
 
-        Addressable::where("addressable_id", $this->id)
-            ->where("addressable_type", self::class)
-            ->whereNotIn("address_id", $addresses_ids)
+        Addressable::where('addressable_id', $this->id)
+            ->where('addressable_type', self::class)
+            ->whereNotIn('address_id', $addresses_ids)
             ->delete();
-        foreach ($addresses as $address)
-        {
+        foreach ($addresses as $address) {
             $this->attachAddress($address);
         }
     }
-
 }
