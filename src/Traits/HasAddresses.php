@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Pardalsalcap\LinterLocations\Models\Address;
-use Pardalsalcap\LinterLocations\Models\AddressModel;
+use Pardalsalcap\LinterLocations\Models\Addressable;
 
 trait HasAddresses
 {
@@ -15,13 +15,9 @@ trait HasAddresses
         return $this->morphToMany(Address::class, 'addressable')->withPivot(['address_type']);
     }
 
-
-
-
-
     public function attachAddress(Address $address)
     {
-        $addressable = AddressModel::where("addressable_id", $this->id)
+        $addressable = Addressable::where("addressable_id", $this->id)
             ->where("addressable_type", self::class)
             ->where("address_id", $address->id)
             ->firstOrNew();
@@ -33,7 +29,7 @@ trait HasAddresses
 
     public function detachAddress(Address $address)
     {
-        return AddressModel::where("address_id", $address->id)
+        return Addressable::where("address_id", $address->id)
             ->where("addressable_id", $this->id)
             ->where("addressable_type", self::class)
             ->delete();
@@ -44,7 +40,7 @@ trait HasAddresses
         $addresses = collect($addresses);
         $addresses_ids = $addresses->pluck("id")->all();
 
-        AddressModel::where("addressable_id", $this->id)
+        Addressable::where("addressable_id", $this->id)
             ->where("addressable_type", self::class)
             ->whereNotIn("address_id", $addresses_ids)
             ->delete();

@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Pardalsalcap\LinterLocations\Models\Country;
 use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 
-class UserRelationManager extends RelationManager
+class AddressableRelationManager extends RelationManager
 {
     protected static string $relationship = 'addresses';
     protected static ?string $inverseRelationship = 'users';
