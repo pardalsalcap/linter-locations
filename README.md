@@ -363,7 +363,7 @@ class YourModelResource extends \Filament\Resources\Resource
 
     // Other resource configurations...
 }
-
+```
 
 ## Credits
 
