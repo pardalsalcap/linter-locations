@@ -1,4 +1,5 @@
 <?php
+
 return [
     'address_type_column' => 'Address Type',
     'address_column' => 'Address',
