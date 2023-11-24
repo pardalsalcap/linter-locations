@@ -21,12 +21,6 @@
         "illuminate/contracts": "^10.0",
         "spatie/laravel-package-tools": "^1.14.0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "git@bitbucket.org:anfibic/linter-package.git"
-        }
-    ],
     "require-dev": {
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^7.8",
