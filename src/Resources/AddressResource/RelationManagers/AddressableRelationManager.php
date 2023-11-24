@@ -21,7 +21,7 @@ use Pardalsalcap\LinterLocations\Models\Country;
 use Pardalsalcap\LinterLocations\Models\State;
 use Pardalsalcap\LinterLocations\Repositories\LinterLocationsRepository;
 
-class UserRelationManager extends RelationManager
+class AddressableRelationManager extends RelationManager
 {
     protected static string $relationship = 'addresses';
 
@@ -127,7 +127,9 @@ class UserRelationManager extends RelationManager
                         return ['' => __('linter-locations::addresses.city_id_placeholder')];
                     })
                     ->searchable(),
-
+                TextInput::make('po')
+                    ->label(__('linter-locations::addresses.po_field'))
+                    ->maxLength(255),
                 TextInput::make('lat')
                     ->label(__('linter-locations::addresses.lat_field'))
                     ->maxLength(255),
