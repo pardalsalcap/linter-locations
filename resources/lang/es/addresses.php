@@ -18,6 +18,7 @@ return [
     'address_type_field' => 'Tipo de dirección',
     'lat_field' => 'Latitud',
     'lon_field' => 'Longitud',
+    'po_field' => 'Código postal',
 
     'state_id_placeholder' => 'Selecciona un país primero',
     'state_id_placeholder_step2' => 'Selecciona una provincia',

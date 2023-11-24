@@ -127,7 +127,9 @@ class AddressableRelationManager extends RelationManager
                         return ['' => __('linter-locations::addresses.city_id_placeholder')];
                     })
                     ->searchable(),
-
+                TextInput::make('po')
+                    ->label(__('linter-locations::addresses.po_field'))
+                    ->maxLength(255),
                 TextInput::make('lat')
                     ->label(__('linter-locations::addresses.lat_field'))
                     ->maxLength(255),
