@@ -158,7 +158,7 @@ $user = User::find(1);
 $address = Address::find(1);
 
 $user->addresses()->attach($address->id, ['address_type' => 'home']);
-``
+```
 
 ## HasAddresses Trait
 
