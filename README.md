@@ -12,7 +12,6 @@ v3 Has Filament 3 Support
 
 v5 Has Filament 5 Support
 
-
 ### Laravel Compatibility
 Our package is designed to work seamlessly with Laravel. Here are the Laravel versions that are compatible with our package:
 
