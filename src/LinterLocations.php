@@ -2,6 +2,4 @@
 
 namespace Pardalsalcap\LinterLocations;
 
-class LinterLocations
-{
-}
+class LinterLocations {}

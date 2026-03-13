@@ -2,16 +2,17 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Filament\Forms\Components\Group;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -28,14 +29,14 @@ class AddressResource extends Resource
 {
     protected static ?string $model = Address::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cursor-arrow-rays';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cursor-arrow-rays';
 
     protected static ?int $navigationSort = 6;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('address')
                     ->label(__('linter-locations::addresses.address_field'))
                     ->required()
@@ -58,8 +59,8 @@ class AddressResource extends Resource
                 Select::make('country_id')
                     ->label(__('linter-locations::addresses.country_id_field'))
                     ->options(LinterLocationsRepository::countriesAll())
-                    //->relationship('city.state.country')
-                    //->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
+                    // ->relationship('city.state.country')
+                    // ->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
                     ->preload()
                     ->searchable()
                     ->reactive()
@@ -118,13 +119,13 @@ class AddressResource extends Resource
                     ->required(),
                 Select::make('city_id')
                     ->label(__('linter-locations::addresses.city_id_field'))
-                    ->options(function (callable $get, callable $set) {
+                    ->options(function (Get $get) {
                         $state = State::find($get('state_id'));
                         if ($state) {
                             return $state->cities->pluck('name', 'id');
                         }
 
-                        //return City::all()->pluck('name', 'id');
+                        // return City::all()->pluck('name', 'id');
                         return ['' => __('linter-locations::addresses.city_id_placeholder')];
                     })
                     ->searchable(),
@@ -166,10 +167,10 @@ class AddressResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

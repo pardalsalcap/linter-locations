@@ -2,14 +2,20 @@
 
 namespace Pardalsalcap\LinterLocations\Resources\AddressResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Components\Group;
+use Filament\Actions\AttachAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -25,13 +31,11 @@ class AddressableRelationManager extends RelationManager
 {
     protected static string $relationship = 'addresses';
 
-    protected static ?string $inverseRelationship = 'users';
-
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('address_type')
+        return $schema
+            ->components([
+                TextInput::make('address_type')
                     ->label(__('linter::addresses.address_type_field'))
                     ->maxLength(255)
                     ->columnSpanFull()
@@ -58,8 +62,8 @@ class AddressableRelationManager extends RelationManager
                 Select::make('country_id')
                     ->label(__('linter-locations::addresses.country_id_field'))
                     ->options(LinterLocationsRepository::countriesAll())
-                    //->relationship('city.state.country')
-                    //->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
+                    // ->relationship('city.state.country')
+                    // ->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
                     ->preload()
                     ->searchable()
                     ->reactive()
@@ -71,11 +75,11 @@ class AddressableRelationManager extends RelationManager
                             $state_id = (int) $get('state_id');
                             $city_id = (int) $get('city_id');
 
-                            if ($state_id && $stateModel = \Pardalsalcap\LinterLocations\Models\State::find($state_id)) {
+                            if ($state_id && $stateModel = State::find($state_id)) {
                                 if ($stateModel->country_id !== $country->id) {
                                     $set('state_id', null);
                                     $set('city_id', null);
-                                } elseif ($city_id && $city = \Pardalsalcap\LinterLocations\Models\City::find($city_id)) {
+                                } elseif ($city_id && $city = City::find($city_id)) {
                                     if ($city->state_id !== $stateModel->id) {
                                         $set('city_id', null);
                                     }
@@ -117,13 +121,13 @@ class AddressableRelationManager extends RelationManager
                     ->required(),
                 Select::make('city_id')
                     ->label(__('linter-locations::addresses.city_id_field'))
-                    ->options(function (callable $get, callable $set) {
+                    ->options(function (Get $get) {
                         $state = State::find($get('state_id'));
                         if ($state) {
                             return $state->cities->pluck('name', 'id');
                         }
 
-                        //return City::all()->pluck('name', 'id');
+                        // return City::all()->pluck('name', 'id');
                         return ['' => __('linter-locations::addresses.city_id_placeholder')];
                     })
                     ->searchable(),
@@ -144,6 +148,7 @@ class AddressableRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('address')
+            ->inverseRelationship('users')
             ->columns([
                 Tables\Columns\TextColumn::make('address_type')
                     ->label(__('linter::addresses.address_type_column')),
@@ -161,8 +166,8 @@ class AddressableRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make()
+                CreateAction::make(),
+                AttachAction::make()
                     ->recordSelect(
                         fn () => Select::make('recordId')
                             ->options(function () {
@@ -177,15 +182,15 @@ class AddressableRelationManager extends RelationManager
                             })
                     )
                     ->preloadRecordSelect()
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
-                        Forms\Components\TextInput::make('address_type')
+                        TextInput::make('address_type')
                             ->required()
                             ->label(__('linter::addresses.address_type_field')),
                     ]),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->mutateRecordDataUsing(function (array $data, Address $address): array {
                         if (! empty($data['city_id'])) {
                             $data['state_id'] = $address->city->state_id;
@@ -194,12 +199,12 @@ class AddressableRelationManager extends RelationManager
 
                         return $data;
                     }),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\DetachAction::make(),
+                DeleteAction::make(),
+                DetachAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

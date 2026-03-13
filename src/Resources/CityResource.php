@@ -2,16 +2,17 @@
 
 namespace Pardalsalcap\LinterLocations\Resources;
 
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\EditAction;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Pardalsalcap\LinterLocations\Models\City;
@@ -26,14 +27,14 @@ class CityResource extends Resource
 {
     protected static ?string $model = City::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?int $navigationSort = 5;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Group::make()
                     ->columns(2)
                     ->columnSpanFull()
@@ -69,7 +70,7 @@ class CityResource extends Resource
                                         ->label(__('linter-locations::cities.state_id_field'))
                                         ->searchable()
                                         ->preload()
-                                        ->options(function (callable $get, callable $set) {
+                                        ->options(function (Get $get) {
                                             $country = Country::find($get('country_id'));
                                             if ($country) {
                                                 return $country->states->pluck('name', 'id');
@@ -117,12 +118,12 @@ class CityResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
-                    //Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
