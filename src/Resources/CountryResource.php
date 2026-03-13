@@ -26,7 +26,7 @@ class CountryResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-globe-alt';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-globe-alt';
 
     public static function form(Schema $schema): Schema
     {

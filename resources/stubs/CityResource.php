@@ -2,6 +2,4 @@
 
 namespace App\Filament\Resources;
 
-class CityResource extends \Pardalsalcap\LinterLocations\Resources\CityResource
-{
-}
+class CityResource extends \Pardalsalcap\LinterLocations\Resources\CityResource {}

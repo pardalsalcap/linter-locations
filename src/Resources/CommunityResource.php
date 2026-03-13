@@ -26,7 +26,7 @@ class CommunityResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-map';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-map';
 
     public static function form(Schema $schema): Schema
     {
@@ -96,7 +96,7 @@ class CommunityResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

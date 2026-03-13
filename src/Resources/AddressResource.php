@@ -29,7 +29,7 @@ class AddressResource extends Resource
 {
     protected static ?string $model = Address::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-cursor-arrow-rays';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cursor-arrow-rays';
 
     protected static ?int $navigationSort = 6;
 
@@ -59,8 +59,8 @@ class AddressResource extends Resource
                 Select::make('country_id')
                     ->label(__('linter-locations::addresses.country_id_field'))
                     ->options(LinterLocationsRepository::countriesAll())
-                    //->relationship('city.state.country')
-                    //->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
+                    // ->relationship('city.state.country')
+                    // ->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
                     ->preload()
                     ->searchable()
                     ->reactive()
@@ -125,7 +125,7 @@ class AddressResource extends Resource
                             return $state->cities->pluck('name', 'id');
                         }
 
-                        //return City::all()->pluck('name', 'id');
+                        // return City::all()->pluck('name', 'id');
                         return ['' => __('linter-locations::addresses.city_id_placeholder')];
                     })
                     ->searchable(),

@@ -27,7 +27,7 @@ class CityResource extends Resource
 {
     protected static ?string $model = City::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-building-office';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?int $navigationSort = 5;
 
@@ -123,7 +123,7 @@ class CityResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

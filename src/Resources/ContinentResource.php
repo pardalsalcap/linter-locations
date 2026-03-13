@@ -24,7 +24,7 @@ class ContinentResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-globe-europe-africa';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-globe-europe-africa';
 
     public static function form(Schema $schema): Schema
     {
@@ -85,7 +85,7 @@ class ContinentResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

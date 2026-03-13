@@ -9,7 +9,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DetachAction;
 use Filament\Actions\EditAction;
-use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -36,7 +35,7 @@ class AddressableRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Forms\Components\TextInput::make('address_type')
+                TextInput::make('address_type')
                     ->label(__('linter::addresses.address_type_field'))
                     ->maxLength(255)
                     ->columnSpanFull()
@@ -63,8 +62,8 @@ class AddressableRelationManager extends RelationManager
                 Select::make('country_id')
                     ->label(__('linter-locations::addresses.country_id_field'))
                     ->options(LinterLocationsRepository::countriesAll())
-                    //->relationship('city.state.country')
-                    //->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
+                    // ->relationship('city.state.country')
+                    // ->getOptionLabelFromRecordUsing(fn(Country $country) => $country->translate(app()->getLocale()))
                     ->preload()
                     ->searchable()
                     ->reactive()
@@ -76,11 +75,11 @@ class AddressableRelationManager extends RelationManager
                             $state_id = (int) $get('state_id');
                             $city_id = (int) $get('city_id');
 
-                            if ($state_id && $stateModel = \Pardalsalcap\LinterLocations\Models\State::find($state_id)) {
+                            if ($state_id && $stateModel = State::find($state_id)) {
                                 if ($stateModel->country_id !== $country->id) {
                                     $set('state_id', null);
                                     $set('city_id', null);
-                                } elseif ($city_id && $city = \Pardalsalcap\LinterLocations\Models\City::find($city_id)) {
+                                } elseif ($city_id && $city = City::find($city_id)) {
                                     if ($city->state_id !== $stateModel->id) {
                                         $set('city_id', null);
                                     }
@@ -128,7 +127,7 @@ class AddressableRelationManager extends RelationManager
                             return $state->cities->pluck('name', 'id');
                         }
 
-                        //return City::all()->pluck('name', 'id');
+                        // return City::all()->pluck('name', 'id');
                         return ['' => __('linter-locations::addresses.city_id_placeholder')];
                     })
                     ->searchable(),
@@ -185,7 +184,7 @@ class AddressableRelationManager extends RelationManager
                     ->preloadRecordSelect()
                     ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
-                        Forms\Components\TextInput::make('address_type')
+                        TextInput::make('address_type')
                             ->required()
                             ->label(__('linter::addresses.address_type_field')),
                     ]),

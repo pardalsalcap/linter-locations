@@ -4,6 +4,7 @@ namespace Pardalsalcap\LinterLocations\Models;
 
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $address_id
@@ -32,7 +33,7 @@ class Addressable extends Model
      */
     protected $fillable = ['address_id', 'addressable_id', 'addressable_type'];
 
-    public function address(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function address(): BelongsTo
     {
         return $this->belongsTo('App\Models\Address');
     }
