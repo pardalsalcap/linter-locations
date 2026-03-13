@@ -5,6 +5,7 @@ namespace Pardalsalcap\LinterLocations\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Pardalsalcap\LinterLocations\Models\City;
 use Pardalsalcap\LinterLocations\Models\Community;
@@ -25,10 +26,27 @@ class LinterLocationsCommand extends Command
 
     protected ?string $fallback_locale = null;
 
+    protected string $datasetsPath = __DIR__.'/../../resources/datasets/';
+
+    protected string $resourcesPath = '';
+
+    protected string $stubsPath = __DIR__.'/../../resources/stubs/';
+
+    protected array $resources = [
+        'ContinentResource',
+        'CountryResource',
+        'CommunityResource',
+        'StateResource',
+        'CityResource',
+        'AddressResource',
+    ];
+
     public function handle(): int
     {
+        $this->resourcesPath = app_path('Filament/Resources');
         $this->loadConfiguration();
         $this->populateDatabase();
+        $this->createResources();
 
         $this->info('Installation completed.');
 
@@ -50,6 +68,59 @@ class LinterLocationsCommand extends Command
             $this->populateStates();
             $this->populateCities();
         }
+    }
+
+    protected function createResources(): void
+    {
+        if (! $this->confirm('Do you want to create the Filament resources in your application?')) {
+            return;
+        }
+
+        if (! $this->ensureDirectory($this->resourcesPath)) {
+            return;
+        }
+
+        foreach ($this->resources as $resource) {
+            $source = $this->stubsPath.$resource.'.php';
+            $destination = $this->resourcesPath.'/'.$resource.'.php';
+
+            if (File::exists($destination)) {
+                $this->warn($resource.'.php already exists, skipping...');
+
+                continue;
+            }
+
+            if (! File::exists($source)) {
+                $this->error($resource.'.php stub was not found.');
+
+                continue;
+            }
+
+            if (! File::copy($source, $destination)) {
+                $this->error('Error copying '.$resource.'.php');
+
+                continue;
+            }
+
+            $this->info($resource.'.php copied successfully');
+        }
+    }
+
+    protected function ensureDirectory(string $path): bool
+    {
+        if (File::isDirectory($path)) {
+            return true;
+        }
+
+        if (! File::makeDirectory($path, 0775, true, true)) {
+            $this->error('Error creating directory '.$path);
+
+            return false;
+        }
+
+        $this->info('Directory created '.$path);
+
+        return true;
     }
 
     protected function populateContinents(): int
@@ -313,16 +384,13 @@ class LinterLocationsCommand extends Command
 
     public function loadJson($file_name)
     {
-        // Construct the path relative to the package's directory
-        $path = base_path('vendor/pardalsalcap/linter-locations/resources/datasets/'.$file_name);
+        $path = $this->datasetsPath.ltrim($file_name, '/');
 
         try {
-            // Check if the file exists and is readable
             if (! file_exists($path) || ! is_readable($path)) {
                 throw new Exception("JSON file not found or not readable: $path");
             }
 
-            // Proceed with reading the file
             $jsonContent = file_get_contents($path);
 
             return json_decode($jsonContent, true);
