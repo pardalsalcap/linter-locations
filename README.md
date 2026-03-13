@@ -7,6 +7,11 @@ The LinterLocations package is a comprehensive solution for managing geolocation
 This package relies on **FilamentPHP**, a powerful admin panel, for its graphical user interface (GUI). The dependency on FilamentPHP enables a user-friendly experience for managing these geographical entities through a sophisticated and intuitive interface.
 
 ## Version Compatibility
+
+v3 Has Filament 3 Support
+
+v5 Has Filament 5 Support
+
 ### Laravel Compatibility
 Our package is designed to work seamlessly with Laravel. Here are the Laravel versions that are compatible with our package:
 
